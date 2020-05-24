@@ -1,8 +1,6 @@
 # production base image to run XBackBone
 FROM php:7.4-fpm as base
 
-ENV BASE_URL=http://localhost
-
 # install nginx and supervisor to run in the same container
 RUN apt-get update && apt-get install -y nginx supervisor
 
@@ -55,12 +53,13 @@ FROM base as runtime
 
 COPY --from=build /app/xbackbone/dist/ /app
 
+# Expose files required to keep container state the same
+VOLUME [ "/app/storage", "/app/resources/database", "/app/logs", "/app/config"]
+
 # ensure that XBackBone can write to the various folders it requires
 RUN chown -R www-data:www-data /app 
 
 WORKDIR /app
-
-VOLUME [ "/app/storage", "/app/resources/database", "/app/logs", "/app/config"]
 
 EXPOSE 80
 
