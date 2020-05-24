@@ -16,6 +16,8 @@ COPY config/nginx.conf /etc/nginx/conf.d/default.conf
 COPY config/supervisord.conf /etc/supervisord.conf
 COPY scripts/init.sh /run/init.sh
 
+RUN chmod +x /run/init.sh
+
 # start from the prod base image and install things required for packaging the website
 FROM base as build
 
@@ -46,7 +48,7 @@ RUN ./node_modules/grunt/bin/grunt build-release
 
 # extract the built files to a dist folder for the production image
 # (grunt could not-zip them up, but I didn't want to change the repo code)
-RUN unzip release*.zip -d ./dist/
+RUN unzip release*.zip -d /app/xbackbone/dist/
 
 # start from the prod base image and build onto it for running XBackBone
 FROM base as runtime
@@ -55,6 +57,8 @@ COPY --from=build /app/xbackbone/dist/ /app
 
 # ensure that XBackBone can write to the various folders it requires
 RUN chown -R www-data:www-data /app 
+
+WORKDIR /app
 
 VOLUME [ "/app/storage", "/app/resources/database", "/app/logs", "/app/config"]
 
