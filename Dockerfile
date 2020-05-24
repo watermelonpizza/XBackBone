@@ -53,13 +53,10 @@ FROM base as runtime
 
 COPY --from=build /app/xbackbone/dist/ /app
 
+WORKDIR /app
+
 # Expose files required to keep container state the same
 VOLUME [ "/app/storage", "/app/resources/database", "/app/logs", "/app/config"]
-
-# ensure that XBackBone can write to the various folders it requires
-RUN chown -R www-data:www-data /app 
-
-WORKDIR /app
 
 EXPOSE 80
 
