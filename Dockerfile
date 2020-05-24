@@ -58,4 +58,6 @@ RUN chown -R www-data:www-data /app
 
 VOLUME [ "/app/storage", "/app/resources/database", "/app/logs", "/app/config"]
 
+EXPOSE 80
+
 ENTRYPOINT ["/run/init.sh"]
