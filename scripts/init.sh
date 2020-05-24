@@ -8,4 +8,6 @@ baseUrl=${baseUrl:-localhost}
 # replace the localhost in the server_name
 sed -i "s/server_name[A-Za-z0-9\-\. ]*;/server_name $baseUrl;/g" /etc/nginx/conf.d/default.conf
 
+chown -R www-data:www-data /app
+
 exec /usr/bin/supervisord -n -c /etc/supervisord.conf
